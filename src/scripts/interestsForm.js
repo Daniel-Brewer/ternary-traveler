@@ -1,6 +1,7 @@
+import API from "./api"
 // This module will have the interest form to be filled out
-// import interestsCollection from "./interestsCollection"
-// import interestsList from "./interestsList"
+
+import placesList from "./placesList"
 
 const interestsForm = {
 
@@ -8,7 +9,11 @@ const interestsForm = {
     createAndAppendForm () {
       // 1. Build HTML form
       let formHeader = document.createElement("h3")
-      formHeader.textContent = "Add a interest"
+      let addInterestButton = document.createElement("button")
+      formHeader.appendChild(addInterestButton);
+      formHeader.textContent = "Add an interest"
+      // EventListener for Button Click
+      addInterestButton.addEventListener("click", this.addInterestToJSON);
   
       let interestsNameField = document.createElement("fieldset")
   
@@ -45,6 +50,18 @@ const interestsForm = {
   
       interestsCostField.appendChild(interestsCostLabel)
       interestsCostField.appendChild(interestsCostInput)
+
+      let interestsReviewField = document.createElement("fieldset")
+  
+      let interestsReviewLabel = document.createElement("label")
+      interestsReviewLabel.textContent = "Review"
+      interestsReviewLabel.setAttribute("for", "interests__Review")
+      let interestsReviewInput = document.createElement("input")
+      interestsReviewInput.setAttribute("id", "interests__Review")
+      interestsReviewInput.setAttribute("name", "interests__Review")
+  
+      interestsReviewField.appendChild(interestsReviewLabel)
+      interestsReviewField.appendChild(interestsReviewInput)
       
 
     //   let placesSelectField = document.createElement("select")
@@ -58,6 +75,11 @@ const interestsForm = {
   
       placesSelectField.appendChild(placesSelectLabel)
       placesSelectField.appendChild(placesSelectInput)
+
+      taskFormSection.appendChild(addTaskButton);
+        addTaskButton.textContent = "Add Task";
+        // EventListener for Button Click
+        addTaskButton.addEventListener("click", this.addTaskToJSON);
   
       let submitButton = document.createElement("button")
       submitButton.textContent = "Add interests"
@@ -73,7 +95,7 @@ const interestsForm = {
       interestsFormFragment.appendChild(interestsNameField)
       interestsFormFragment.appendChild(interestsDescriptionField)
       interestsFormFragment.appendChild(interestsCostField)
-      interestsFormFragment.appendChild(placesSelectField)
+      interestsFormFragment.appendChild(interestsReviewField)
       interestsFormFragment.appendChild(submitButton)
   
       let formArticle = document.querySelector(".form")
@@ -83,9 +105,10 @@ const interestsForm = {
     // This module will also contain the function that executes when the button in the form is clicked. When the button in the form is clicked, the following will happen:
     handleAddNewInterests (event) {
       // 1. Get user input that user entered
-      let inputinterestsName = document.querySelector("#interests__name").value
-      let inputinterestsDescription = document.querySelector("#interests__Description").value
-      let inputinterestsCost = document.querySelector("#interests__Cost").value
+      let inputInterestsName = document.querySelector("#interests__name").value
+      let inputInterestsDescription = document.querySelector("#interests__Description").value
+      let inputInterestsCost = document.querySelector("#interests__Cost").value
+      let inputInterestsReview = document.querySelector("#interests__Review").value
   
       // 2. Create a new object with the same structure we have been using throughout the application to represent a interests item:
       // {
@@ -94,32 +117,23 @@ const interestsForm = {
         //   Cost: "user input Cost"
       // }
   
-      let newinterests = {
-        name: inputinterestsName,
-        Description: inputinterestsDescription,
-        Cost: inputinterestsCost
+      let newInterests = {
+        name: inputInterestsName,
+        description: inputInterestsDescription,
+        cost: inputInterestsCost,
+        review: inputInterestsReview
       }
-  
+      
       // 3. Call the method(postNewinterests) with the fetch request to POST to the API and pass it the object we created in the previous step
-  
-      // Notice the import statement at the top of the module so I can call a method in the interestsCollection module.
-  
-      // *****IMPORTANT*****
-      // You will notice at this point that while a new interests item is being added to our API, unless you refresh the application, the newly added item will not show up on the DOM. We definitely do not want our user to have to hit refresh every time they add new interests to their refrigerator.
-  
-      // We also do NOT want to manually add our new interests item to the list of interests on the DOM. Instead, we want our data to be our point of truth. Our DOM should always use the data from our API to render the DOM. Logically, here are the steps we want to take place.
-      // 1. Add new interests item to the API using a POST HTTP request.
-      //     We are already doing this. We are using the fetch defined in the interestsCollection module to add a new interests item to the API.
-      // 2. After the new item has been added, we want to get a list of all the interests items (using a GET HTTP request) and render them to the DOM.
-            // Because we want to make sure we only do this after the first step is done, we will return the fetch call that is doing the POST and chain a .then to the call (just like we do with the GET). This means we are doing the POST and then waiting until a response comes back before doing this step. The reason we want to wait is because we want to be sure that when we ask our API for the list of interests items, the newly added item is on that list. So we wait until it has been added before using a GET request to get a list of all interests items and rendering them to the DOM.         
-            // But that sounds awfully familiar: make a GET HTTP request to the API for a list of all interests items, iterate over that list and build the HTML for each item, append the HTML to the DOM. This is exactly what our fridgify method in our interestsList module is already doing. Which means I can simply call that method from here. Once again, note that I am importing the appropriate module at the top of this file.
-      // To summarize, we are adding a new item to the API, then getting an updated list of items from the API and rerendering the DOM.
-      // *******************
-      interestsCollection.postNewinterests(newinterests)
-      .then(response => {
-        interestsList.fridgify()
-      })
+      
+      API.postNewData("interests", newInterests)
+
+        },
+
+
+        // .then(response => {
+        //     placesList.interests();
+        //   })
+
     }
-  }
-  
   export default interestsForm
