@@ -1,22 +1,21 @@
 import API from "./api"
 // This module will have the interest form to be filled out
 
-import placesList from "./placesList"
-
 const interestsForm = {
-
+  
     // This module will build a form and append it to the DOM. The form will contain input fields for a user to add a new interests to their refrigerator and a button with an event listener that will listen for the click
-    createAndAppendForm () {
+    createInterestForm () {
       // 1. Build HTML form
+      let interestsContainer = document.createElement("container")
+      interestsContainer.setAttribute("id", `interest--${value.id}`)
       let formHeader = document.createElement("h3")
-      let addInterestButton = document.createElement("button")
-      formHeader.appendChild(addInterestButton);
+      let saveInterestButton = document.createElement("button")
+      formHeader.appendChild(saveInterestButton);
       formHeader.textContent = "Add an interest"
       // EventListener for Button Click
-      addInterestButton.addEventListener("click", this.addInterestToJSON);
+      saveInterestButton.addEventListener("click", this.saveInterest("interests"));
   
       let interestsNameField = document.createElement("fieldset")
-  
       let interestsNameLabel = document.createElement("label")
       interestsNameLabel.textContent = "Name"
       interestsNameLabel.setAttribute("for", "interests__name")
@@ -28,7 +27,6 @@ const interestsForm = {
       interestsNameField.appendChild(interestsNameInput)
   
       let interestsDescriptionField = document.createElement("fieldset")
-  
       let interestsDescriptionLabel = document.createElement("label")
       interestsDescriptionLabel.textContent = "Description"
       interestsDescriptionLabel.setAttribute("for", "interests__Description")
@@ -40,7 +38,6 @@ const interestsForm = {
       interestsDescriptionField.appendChild(interestsDescriptionInput)
   
       let interestsCostField = document.createElement("fieldset")
-  
       let interestsCostLabel = document.createElement("label")
       interestsCostLabel.textContent = "Cost"
       interestsCostLabel.setAttribute("for", "interests__Cost")
@@ -52,41 +49,44 @@ const interestsForm = {
       interestsCostField.appendChild(interestsCostInput)
 
       let interestsReviewField = document.createElement("fieldset")
-  
       let interestsReviewLabel = document.createElement("label")
       interestsReviewLabel.textContent = "Review"
       interestsReviewLabel.setAttribute("for", "interests__Review")
       let interestsReviewInput = document.createElement("input")
       interestsReviewInput.setAttribute("id", "interests__Review")
       interestsReviewInput.setAttribute("name", "interests__Review")
-  
+
+      let placesDropdown = document.createElement("select");
+      placesDropdown.setAttribute("id", "mySelect");
+
+      let buenosAiresOption = document.createElement("option");
+      buenosAiresOption.setAttribute("value", `${places[0].id}`)
+      buenosAiresOption.textContent = `${places[0].name}`
+
+      let rioOption = document.createElement("option");
+      rioOption.setAttribute("value", `${places[1].id}`)
+      rioOption.textContent = `${places[1].name}`
+
+      let santiagoOption = document.createElement("option");
+      santiagoOption.setAttribute("value", `${places[2].id}`)
+      santiagoOption.textContent = `${places[2].name}`
+      
+      placesDropdown.appendChild(buenosAiresOption)
+      placesDropdown.appendChild(rioOption)
+      placesDropdown.appendChild(santiagoOption)
+      interestsContainer.appendChild(placesDropdown)
       interestsReviewField.appendChild(interestsReviewLabel)
       interestsReviewField.appendChild(interestsReviewInput)
       
+      let addInterestButton = document.createElement("button")
+      addInterestButton.textContent = "Save interests"
+      addInterestButton.setAttribute("class", "interests__save")
 
-    //   let placesSelectField = document.createElement("select")
-  
-    //   let placesSelectLabel = document.createElement("option")
-    //   placesSelectLabel.value = 
-    //   placesSelectLabel.setAttribute("for", "interests__Cost")
-    //   let placesSelectInput = document.createElement("input")
-    //   placesSelectInput.setAttribute("id", "interests__Cost")
-    //   placesSelectInput.setAttribute("name", "interests__Cost")
-  
-      placesSelectField.appendChild(placesSelectLabel)
-      placesSelectField.appendChild(placesSelectInput)
+      interestsContainer.appendChild(addInterestButton);
+ 
+      // 2. EventListener for Button Click
 
-      taskFormSection.appendChild(addTaskButton);
-        addTaskButton.textContent = "Add Task";
-        // EventListener for Button Click
-        addTaskButton.addEventListener("click", this.addTaskToJSON);
-  
-      let submitButton = document.createElement("button")
-      submitButton.textContent = "Add interests"
-      submitButton.setAttribute("class", "interests__save")
-  
-      // 2. Attach event listener to button in form
-      submitButton.addEventListener("click", this.handleAddNewInterests)
+      addInterestButton.addEventListener("click", this.handleAddNewInterests)
   
       // 3. Append the HTML form to the DOM
       //Notice that I have added an article element to my index.html with the class "form".
@@ -98,7 +98,7 @@ const interestsForm = {
       interestsFormFragment.appendChild(interestsReviewField)
       interestsFormFragment.appendChild(submitButton)
   
-      let formArticle = document.querySelector(".form")
+      let formArticle = document.querySelector(".output__interests")
       formArticle.appendChild(interestsFormFragment)
   
     },
@@ -109,31 +109,21 @@ const interestsForm = {
       let inputInterestsDescription = document.querySelector("#interests__Description").value
       let inputInterestsCost = document.querySelector("#interests__Cost").value
       let inputInterestsReview = document.querySelector("#interests__Review").value
+      let inputInterestsPlace = document.querySelector("#interests__Place").value
   
       // 2. Create a new object with the same structure we have been using throughout the application to represent a interests item:
-      // {
-        //   name: "user input name",
-        //   Description: "user input Description",
-        //   Cost: "user input Cost"
-      // }
   
       let newInterests = {
         name: inputInterestsName,
         description: inputInterestsDescription,
         cost: inputInterestsCost,
         review: inputInterestsReview
+//      place:
       }
       
       // 3. Call the method(postNewinterests) with the fetch request to POST to the API and pass it the object we created in the previous step
       
-      API.postNewData("interests", newInterests)
-
+      API.saveNewData("interests", newInterests)
         },
-
-
-        // .then(response => {
-        //     placesList.interests();
-        //   })
-
     }
   export default interestsForm

@@ -1,5 +1,4 @@
-import placesList from "./placesList"
-import interestsForm from "./interestsForm"
+import interestsList from "./interestsList"
+
 // This module will run the application by calling the necessary functions
-placesList.getPlacesList()
-createAndAppendForm ()
+interestsList.getInterests()
